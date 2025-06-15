@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>&lt;model-viewer&gt; template</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="&lt;model-viewer&gt; template" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link type="text/css" href="./styles.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 15px;
+        font-family: 'Quicksand', sans-serif;
+        background: linear-gradient(to bottom, #a7d7a7, #f3f7e7);
+        color: #2f4f2f; 
+        position: relative;
+        min-height: 100vh;
+      }
+
+      .variant-buttons,
+      .animation-buttons,
+      .view-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .variant-buttons {
+        position: absolute;
+        bottom: 45px;
+        right: 80px;
+      }
+
+      .animation-buttons {
+        position: absolute;
+        bottom: 45px;
+        left: 80px;
+      }
+
+      .view-buttons {
+        position: absolute;
+        top: 15px;
+        right: 80px;
+      }
+
+
+      button {
+        padding: 8px 16px;
+        border: none;
+        background-color: #3a7d44; 
+        color: white;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+        user-select: none;
+      }
+      button:hover {
+        background-color: #2f5a2a;
+      }
+
+
+      #paw-mascot {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        font-size: 2rem;
+        user-select: none;
+        pointer-events: none;
+        opacity: 0.3;
+        transition: opacity 0.3s ease;
+      }
+      #paw-mascot:hover {
+        opacity: 0.7;
+      }
+
+      
+    </style>
+  </head>
+
+  <body>
+
+    <div id="paw-mascot" title="Welcome to the Zoo!">🐾</div>
+
+    <model-viewer
+      src="mandaiplay multi.glb"
+      ios-src="mandaiplay multi.usdz"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      camera-controls
+      tone-mapping="neutral"
+      poster="poster.png"
+      shadow-intensity="1"
+      camera-orbit="1.858deg 84.13deg 1.388m"
+      field-of-view="30deg"
+      id="mandaiplay"
+    >
+      <button
+        class="Hotspot"
+        slot="hotspot-1"
+        data-surface="0 0 1417 1404 1416 0.385 0.466 0.149"
+        data-visibility-attribute="visible"
+        onMouseOver="addHotSpot1()"
+        onMouseOut="removeHotSpot1()"
+      >
+        <div
+          class="HotspotAnnotation"
+          id="hotSpot1"
+          style="visibility: hidden"
+          >hamster</div
+        >
+      </button>
+      <button
+        class="Hotspot"
+        slot="hotspot-2"
+        data-surface="4 0 18 7 6 0.077 0.236 0.687"
+        data-visibility-attribute="visible"
+        onMouseOver="addHotSpot2()"
+        onMouseOut="removeHotSpot2()"
+      >
+        <div
+          class="HotspotAnnotation"
+          id="hotSpot2"
+          style="visibility: hidden"
+          >rabbit</div
+        >
+      </button>
+      <div class="progress-bar hide" slot="progress-bar">
+        <div class="update-bar"></div>
+      </div>
+      <button slot="ar-button" id="ar-button">View in your space</button>
+      <div id="ar-prompt">
+        <img src="ar_hand_prompt.png" />
+      </div>
+    </model-viewer>
+
+
+    <div class="variant-buttons">
+      <button onclick="setVariant1()">🐒 Variant 1</button>
+      <button onclick="setVariant2()">🦓 Variant 2</button>
+    </div>
+
+
+    <div class="animation-buttons">
+      <button onclick="upAnimate()">⬆️ Move Up Animation</button>
+      <button onclick="forwardAnimate()">➡️ Move Forward Animation</button>
+    </div>
+
+
+    <div class="view-buttons">
+      <button onclick="view('0.4156deg 138.6deg 1.388m', '30deg')">🦘 Bottom</button>
+      <button onclick="view('0.9005deg 85.83deg 1.388m', '30deg')">🦁 Front</button>
+      <button onclick="view('1.091deg 34.64deg 1.388m', '30deg')">🦜 Top</button>
+    </div>
+
+    <script>
+      function addHotSpot1() {
+        document.getElementById('hotSpot1').style.visibility = 'visible';
+      }
+      function removeHotSpot1() {
+        document.getElementById('hotSpot1').style.visibility = 'hidden';
+      }
+      function addHotSpot2() {
+        document.getElementById('hotSpot2').style.visibility = 'visible';
+      }
+      function removeHotSpot2() {
+        document.getElementById('hotSpot2').style.visibility = 'hidden';
+      }
+
+      function upAnimate() {
+        const viewer = document.getElementById('mandaiplay');
+        viewer.animationName = 'ArmatureAction.001';
+        viewer.play({ repetitions: 1 });
+      }
+
+      function forwardAnimate() {
+        const viewer = document.getElementById('mandaiplay');
+        viewer.animationName = 'ArmatureAction';
+        viewer.play();
+      }
+
+      function setVariant1() {
+        document.getElementById('mandaiplay').variantName = 'Variant 1';
+      }
+
+      function setVariant2() {
+        document.getElementById('mandaiplay').variantName = 'Variant 2';
+      }
+
+      function view(orbit, zoom) {
+        const viewer = document.getElementById('mandaiplay');
+        viewer.cameraOrbit = orbit;
+        viewer.fieldOfView = zoom;
+      }
+    </script>
+
+    <script src="script.js"></script>
+    <script
+      type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
+    ></script>
+  </body>
+</html>
